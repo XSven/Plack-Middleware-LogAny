@@ -11,9 +11,22 @@ my %WriteMakefileArgs = (
   VERSION_FROM  => 'lib/Plack/Middleware/LogAny.pm',
   ABSTRACT_FROM => 'lib/Plack/Middleware/LogAny.pod',
   LICENSE       => 'perl_5',
-  dist          => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-  clean         => { FILES    => 'Plack-Middleware-LogAny-* cover_db' },
-  realclean     => { FILES    => 'local' },
+  META_MERGE    => {
+    'meta-spec' => { version => 2 },
+    resources   => {
+      repository => {
+        type => 'git',
+        url  => 'git://github.com/XSven/Plack-Middleware-LogAny.git',
+        web  => 'https://github.com/XSven/Plack-Middleware-LogAny',
+      },
+      bugtracker => {
+        web => 'https://github.com/XSven/Plack-Middleware-LogAny/issues',
+      },
+    },
+  },
+  dist      => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+  clean     => { FILES    => 'Plack-Middleware-LogAny-* cover_db' },
+  realclean => { FILES    => 'local' },
 );
 
 unless ( exists( $ENV{ MAKELEVEL } ) ) {
