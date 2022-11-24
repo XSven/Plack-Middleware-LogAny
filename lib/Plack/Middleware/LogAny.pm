@@ -6,7 +6,7 @@ use parent qw{Plack::Middleware};
 use strict;
 use warnings;
 
-our $VERSION = '0.001';
+our $VERSION = '0.001001';
 
 sub prepare_app {
     my ($self) = @_;
