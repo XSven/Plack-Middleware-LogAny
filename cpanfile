@@ -16,3 +16,6 @@ on 'test' => sub {
   requires 'Test::More' => '0';
 };
 
+on 'develop' => sub {
+  requires 'App::Software::License' => 0;
+}

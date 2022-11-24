@@ -10,7 +10,7 @@ my %WriteMakefileArgs = (
   AUTHOR        => 'Sven Willenbuecher <sven.willenbuecher@kuehne-nagel.com>',
   VERSION_FROM  => 'lib/Plack/Middleware/LogAny.pm',
   ABSTRACT_FROM => 'lib/Plack/Middleware/LogAny.pod',
-  LICENSE       => 'perl_5',
+  LICENSE       => 'Perl_5',
   META_MERGE    => {
     'meta-spec' => { version => 2 },
     resources   => {
