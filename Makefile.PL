@@ -3,7 +3,6 @@ use strict; use warnings;
 #>>>
 
 use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );
-use lib                           ();
 
 my %WriteMakefileArgs = (
   NAME          => 'Plack::Middleware::LogAny',
@@ -30,8 +29,8 @@ my %WriteMakefileArgs = (
 );
 
 unless ( exists( $ENV{ MAKELEVEL } ) ) {
-  my $local_lib = "$ENV{ PWD }/local/lib/perl5";
-  lib->import( $local_lib );
+  require lib; lib->import( "$ENV{ PWD }/local/lib/perl5" );
+
   no warnings 'once';
   *MY::postamble = sub {
     my $make_fragment .= <<'MAKE_FRAGMENT';
