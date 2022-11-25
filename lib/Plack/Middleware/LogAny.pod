@@ -6,10 +6,10 @@ Plack::Middleware::LogAny - Use Log::Any to handle logging from your Plack app
 
 =head1 SYNOPSIS
 
-builder {
-	enable "LogAny", category => "plack";
-	$app;
-}
+  builder {
+    enable 'LogAny', category => 'plack';
+    $app;
+  }
 
 =head1 DESCRIPTION
 
@@ -42,7 +42,7 @@ to the root logger.
 
 =back
 
-=head1 =head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2012 by Michael Alan Dorman.
 
