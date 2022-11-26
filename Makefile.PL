@@ -29,20 +29,21 @@ my %WriteMakefileArgs = (
 );
 
 unless ( exists( $ENV{ MAKELEVEL } ) ) {
-  require lib; lib->import( "$ENV{ PWD }/local/lib/perl5" );
+  my $local_lib = "$ENV{ PWD }/local/lib/perl5";
+  require lib; lib->import( $local_lib );
 
   no warnings 'once';
   *MY::postamble = sub {
-    my $make_fragment .= <<'MAKE_FRAGMENT';
+    my $make_fragment .= <<"MAKE_FRAGMENT";
 ifdef PERL5LIB
-  PERL5LIB := $(PWD)/local/lib/perl5:$(PERL5LIB)
+  PERL5LIB := $local_lib:\$(PERL5LIB)
 else
-  export PERL5LIB := $(PWD)/local/lib/perl5
+  export PERL5LIB := $local_lib
 endif
 
 .PHONY: installdeps
 installdeps: cpanfile
-	cpanm --no-man-pages --local-lib-contained $(PWD)/local --installdeps .
+	cpanm --no-man-pages --local-lib-contained $local_lib/../.. --installdeps .
 
 .PHONY: cover
 cover:
