@@ -70,3 +70,4 @@
 \B\.vimrc\b
 
 \blocal\b
+\bREADME.md\b
