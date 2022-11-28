@@ -42,6 +42,10 @@ to the root logger.
 
 =back
 
+=head1 AUTHOR
+
+Sven Willenbuecher <sven.willenbuecher@kuehne-nagel.com>
+
 =head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2012 by Michael Alan Dorman.
