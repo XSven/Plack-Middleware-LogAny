@@ -12,7 +12,7 @@ our $VERSION = '0.001001';
 
 sub prepare_app {
   my ( $self ) = @_;
-  $self->logger( Log::Any->get_logger( category => $self->category || '' ) );
+  $self->logger( Log::Any->get_logger( category => defined $self->category ? $self->category : '' ) );
 }
 
 sub call {
