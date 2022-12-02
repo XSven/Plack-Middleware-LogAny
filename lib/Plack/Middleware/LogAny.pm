@@ -1,7 +1,7 @@
 #<<<
 use strict; use warnings;
 #>>>
-#
+
 package Plack::Middleware::LogAny;
 
 use parent                qw( Plack::Middleware );
