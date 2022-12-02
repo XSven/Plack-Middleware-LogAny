@@ -8,7 +8,7 @@ use parent                qw( Plack::Middleware );
 use Log::Any              qw();
 use Plack::Util::Accessor qw( category logger );
 
-our $VERSION = '0.001001';
+our $VERSION = '0.001002';
 
 sub prepare_app {
   my ( $self ) = @_;
