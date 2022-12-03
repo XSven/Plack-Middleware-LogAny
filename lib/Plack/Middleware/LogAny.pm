@@ -19,10 +19,10 @@ sub call {
   my ( $self, $env ) = @_;
 
   $env->{ 'psgix.logger' } = sub {
-    my $args   = shift;
-    my $level  = $args->{ level };
+    my ( $level, $message ) = @{ $_[ 0 ] }{ qw(level message) };
+
     my $logger = $self->logger;
-    @_ = ( $logger, $args->{ message } );
+    @_ = ( $logger, $message );
     goto &{ $logger->can( $level ) };
   };
 
