@@ -2,9 +2,11 @@
 use strict; use warnings;
 #>>>
 
-use Test::More import => [ qw( BAIL_OUT explain is is_deeply pass use_ok ) ], tests => 5;
+use Test::More import => [ qw( BAIL_OUT is is_deeply use_ok ) ], tests => 5;
 
 use HTTP::Request::Common qw( GET );
+use Log::Any::Test        qw();
+use Log::Any              qw( $logger );    # Log::Any global log buffer category is "main"
 use Plack::Test           qw();
 
 my $middleware;
@@ -14,17 +16,35 @@ BEGIN {
   use_ok( $middleware ) or BAIL_OUT "Cannot load middleware '$middleware'!";
 }
 
-my $coreApp = sub { my ( $env ) = @_; pass( 'core app was called' ); return [ 200, [], [ 'some response content' ] ] };
+my $category;
+my $messages;
+
+my $app = sub {
+  my ( $env ) = @_;
+  map { $env->{ 'psgix.logger' }->( $_ ) } @{ $messages };
+  return [ 200, [], [] ];
+};
+
+$category = '';
+$messages = [
+  { category => $category, level => 'trace', message => 'this is a trace message' },
+  { category => $category, level => 'debug', message => 'this is a debug message' }
+];
 
 my $expected_header_name  = 'X-Request-ID';
 my $expected_header_value = '77e1c83b-7bb0-437b-bc50-a7a58e5660ac';
-my $testApp =
+my $wrapped_app =
   Plack::Test->create(
-  $middleware->wrap( $coreApp, header_names => [ 'Content-Type', 'X-B3-TraceId', $expected_header_name ] ) );
+  $middleware->wrap( $app, header_names => [ 'Content-Type', 'X-B3-TraceId', $expected_header_name ] ) );
 
-$testApp->request( GET '/' );
-is scalar( %{ Log::Any->_manager->get_context } ), 0, 'empty Log Any context';
+$wrapped_app->request( GET '/' );
+is_deeply $logger->msgs, $messages, 'check Log::Any global log buffer (root logger based logging)';
+is scalar %{ Log::Any->get_logger( category => $category )->context }, 0, 'empty logging context';
 
-$testApp->request( GET '/', $expected_header_name => $expected_header_value );
-is_deeply( Log::Any->_manager->get_context, { $expected_header_name, $expected_header_value },
-  'check Log Any context' );
+$logger->clear;
+
+$wrapped_app->request( GET '/', $expected_header_name => $expected_header_value );
+is_deeply $logger->msgs,
+  [ map { $_->{ message } = $_->{ message } . " {\"$expected_header_name\" => \"$expected_header_value\"}"; $_ }
+    @$messages ], 'check Log::Any global log buffer';
+is scalar %{ Log::Any->get_logger( category => $category )->context }, 0, 'empty logging context';
