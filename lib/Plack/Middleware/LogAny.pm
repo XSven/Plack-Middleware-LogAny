@@ -7,8 +7,9 @@ package Plack::Middleware::LogAny;
 our $VERSION = '0.001003';
 
 use parent                qw( Plack::Middleware );
+use subs                  qw( _name_to_key );
 use Log::Any              qw();
-use Plack::Util::Accessor qw( category logger );
+use Plack::Util::Accessor qw( category header_names logger );
 
 sub prepare_app {
   my ( $self ) = @_;
@@ -18,7 +19,17 @@ sub prepare_app {
 sub call {
   my ( $self, $env ) = @_;
 
+  my %header;
+  if (my $header_names = $self->header_names) {
+		foreach my $name ( @{ $header_names } ) {
+			my $key = _name_to_key $name;
+			$header{ $name } = $env->{ $key } if defined $env->{ $key };
+		}
+  }
+
   my $logger = $self->logger;
+  local @{ $logger->context }{ keys %header } = values %header if %header;
+
   $env->{ 'psgix.logger' } = sub {
     my ( $level, $message ) = @{ $_[ 0 ] }{ qw( level message ) };
 
@@ -27,6 +38,19 @@ sub call {
   };
 
   $self->app->( $env );
+}
+
+sub _name_to_key ( $ ) {
+  my ( $name ) = @_;
+
+  # https://github.com/plack/Plack/blob/master/lib/Plack/HTTPParser/PP.pm#L66
+  ( my $key = $name ) =~ s/-/_/g;
+  $key = uc $key;
+  if ( $key !~ /\A(?:CONTENT_LENGTH|CONTENT_TYPE)\z/ ) {
+    $key = "HTTP_$key";
+  }
+
+  return $key;
 }
 
 1;
