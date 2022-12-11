@@ -24,7 +24,7 @@ my $conf = qq(
   log4perl.appender.BUFFER        = Log::Log4perl::Appender::TestBuffer
   log4perl.appender.BUFFER.name   = buffer
   log4perl.appender.BUFFER.layout = Log::Log4perl::Layout::PatternLayout
-  log4perl.appender.BUFFER.layout.ConversionPattern = %c,%p,%X{$header_name},%m%n
+  log4perl.appender.BUFFER.layout.ConversionPattern = %c,%p,%X{$header_name},%M,%m%n
 );
 Log::Log4perl->init( \$conf );
 Log::Any::Adapter->set( 'Log::Log4perl' );
@@ -46,7 +46,8 @@ $messages = [
   { level => 'debug', message => 'this is a debug message' }
 ];
 
-Plack::Test->create( $middleware->wrap( $app ) )->request( GET '/', $header_name => $header_value );
+Plack::Test->create( $middleware->wrap( $app, header_names => [ 'Content-Type', 'X-B3-TraceId', $header_name ] ) )
+  ->request( GET '/', $header_name => $header_value );
 
 my $test_appender = Log::Log4perl::Appender::TestBuffer->by_name( 'buffer' );
 
