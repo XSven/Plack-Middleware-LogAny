@@ -4,7 +4,7 @@ use strict; use warnings;
 
 package Plack::Middleware::LogAny;
 
-our $VERSION = '0.001003';
+our $VERSION = '0.002';
 
 use parent                qw( Plack::Middleware );
 use subs                  qw( _name_to_key );
@@ -20,11 +20,11 @@ sub call {
   my ( $self, $env ) = @_;
 
   my %header;
-  if (my $header_names = $self->header_names) {
-		foreach my $name ( @{ $header_names } ) {
-			my $key = _name_to_key $name;
-			$header{ $name } = $env->{ $key } if defined $env->{ $key };
-		}
+  if ( my $header_names = $self->header_names ) {
+    foreach my $name ( @{ $header_names } ) {
+      my $key = _name_to_key $name;
+      $header{ $name } = $env->{ $key } if defined $env->{ $key };
+    }
   }
 
   my $logger = $self->logger;
@@ -43,7 +43,6 @@ sub call {
 sub _name_to_key ( $ ) {
   my ( $name ) = @_;
 
-  # https://github.com/plack/Plack/blob/master/lib/Plack/HTTPParser/PP.pm#L66
   ( my $key = $name ) =~ s/-/_/g;
   $key = uc $key;
   if ( $key !~ /\A(?:CONTENT_LENGTH|CONTENT_TYPE)\z/ ) {

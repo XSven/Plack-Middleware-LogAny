@@ -1,5 +1,9 @@
 Release history for Plack-Middleware-LogAny
 
+0.002     2022-12-12
+          - revert release history
+          - on request pass HTTP headers to logging context
+
 0.001003  2022-12-10
           - use tailcall to replace the current invocation of psgix.logger
           - make sure that the issuer of a logging request (%M) is set
