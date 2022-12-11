@@ -2,36 +2,47 @@
 
 =head1 NAME
 
-Plack::Middleware::LogAny - Use Log::Any to handle logging from your Plack app
+Plack::Middleware::LogAny - Use Log::Any to handle logging from your PSGI app
 
 =head1 SYNOPSIS
 
+  # in app.psgi file
+  use Plack::Builder;
+
+  # PSGI application
+  my $app = sub { ... };
+
+  # DSL interface
   builder {
-    enable 'LogAny', category => 'plack';
+    enable 'LogAny', category => 'plack', header_names => [ qw( X-Request-ID ) ];
     $app;
   }
+
+  # alternative OO interface
+  Plack::Middleware::LogAny->wrap( $app, category => 'plack', header_names => [ qw( X-Request-ID ) ] );
 
 =head1 DESCRIPTION
 
 LogAny is a L<Plack::Middleware> component that allows you to use L<Log::Any>
-to handle the logging object, C<psgix.logger>.
+to handle the logging object, C<psgix.logger> that is described in
+L<PSGI::Extensions>.
 
 It really tries to be the thinnest possible shim, so it doesn't handle any
-configuration beyond setting the category to which messages from plack might be
-logged.
+configuration beyond setting the category to which messages from PSGI might
+be logged.
 
 =head1 METHODS
 
-=head2 prepare_app
+=head2 prepare_app()
 
 This method initializes the logger using the category that you (optionally)
 set.
 
-=head2 call
+=head2 call()
 
 Actually handles making sure the logger is invoked.
 
-=head1 CONFIGURATION
+=head1 CONFIGURATION OPTIONS
 
 =over 4
 
