@@ -31,11 +31,10 @@ $messages = [
   { category => $category, level => 'debug', message => 'this is a debug message' }
 ];
 
-my $expected_header_name  = 'X-Request-ID';
-my $expected_header_value = '77e1c83b-7bb0-437b-bc50-a7a58e5660ac';
+my $header_name  = 'X-Request-ID';
+my $header_value = '77e1c83b-7bb0-437b-bc50-a7a58e5660ac';
 my $wrapped_app =
-  Plack::Test->create(
-  $middleware->wrap( $app, header_names => [ 'Content-Type', 'X-B3-TraceId', $expected_header_name ] ) );
+  Plack::Test->create( $middleware->wrap( $app, header_names => [ 'Content-Type', 'X-B3-TraceId', $header_name ] ) );
 
 $wrapped_app->request( GET '/' );
 is_deeply $logger->msgs, $messages, 'check Log::Any global log buffer (root logger based logging)';
@@ -43,8 +42,8 @@ is scalar %{ Log::Any->get_logger( category => $category )->context }, 0, 'empty
 
 $logger->clear;
 
-$wrapped_app->request( GET '/', $expected_header_name => $expected_header_value );
+$wrapped_app->request( GET '/', $header_name => $header_value );
 is_deeply $logger->msgs,
-  [ map { $_->{ message } = $_->{ message } . " {\"$expected_header_name\" => \"$expected_header_value\"}"; $_ }
-    @$messages ], 'check Log::Any global log buffer';
+  [ map { $_->{ message } = $_->{ message } . " {\"$header_name\" => \"$header_value\"}"; $_ } @$messages ],
+  'check Log::Any global log buffer';
 is scalar %{ Log::Any->get_logger( category => $category )->context }, 0, 'empty logging context';
