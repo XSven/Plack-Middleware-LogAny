@@ -34,7 +34,7 @@ $messages = [
 my $header_name  = 'X-Request-ID';
 my $header_value = '77e1c83b-7bb0-437b-bc50-a7a58e5660ac';
 my $wrapped_app =
-  Plack::Test->create( $middleware->wrap( $app, header_names => [ 'Content-Type', 'X-B3-TraceId', $header_name ] ) );
+  Plack::Test->create( $middleware->wrap( $app, context => [ 'Content-Type', 'X-B3-TraceId', $header_name ] ) );
 
 $wrapped_app->request( GET '/' );
 is_deeply $logger->msgs, $messages, 'check Log::Any global log buffer (root logger based logging)';

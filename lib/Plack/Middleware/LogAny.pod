@@ -14,12 +14,12 @@ Plack::Middleware::LogAny - Use Log::Any to handle logging from your PSGI app
 
   # DSL interface
   builder {
-    enable 'LogAny', category => 'plack', header_names => [ qw( X-Request-ID ) ];
+    enable 'LogAny', category => 'plack', context => [ qw( X-Request-ID ) ];
     $app;
   }
 
   # alternative OO interface
-  Plack::Middleware::LogAny->wrap( $app, category => 'plack', header_names => [ qw( X-Request-ID ) ] );
+  Plack::Middleware::LogAny->wrap( $app, category => 'plack', context => [ qw( X-Request-ID ) ] );
 
 =head1 DESCRIPTION
 

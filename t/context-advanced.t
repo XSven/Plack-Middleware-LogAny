@@ -46,7 +46,7 @@ $messages = [
   { level => 'debug', message => 'this is a debug message' }
 ];
 
-Plack::Test->create( $middleware->wrap( $app, header_names => [ 'Content-Type', 'X-B3-TraceId', $header_name ] ) )
+Plack::Test->create( $middleware->wrap( $app, context => [ 'Content-Type', 'X-B3-TraceId', $header_name ] ) )
   ->request( GET '/', $header_name => $header_value );
 
 my $test_appender = Log::Log4perl::Appender::TestBuffer->by_name( 'buffer' );

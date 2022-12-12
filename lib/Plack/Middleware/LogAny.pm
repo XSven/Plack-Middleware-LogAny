@@ -9,7 +9,7 @@ our $VERSION = '0.002';
 use parent                qw( Plack::Middleware );
 use subs                  qw( _name_to_key );
 use Log::Any              qw();
-use Plack::Util::Accessor qw( category header_names logger );
+use Plack::Util::Accessor qw( category context logger );
 
 sub prepare_app {
   my ( $self ) = @_;
@@ -20,8 +20,8 @@ sub call {
   my ( $self, $env ) = @_;
 
   my %header;
-  if ( my $header_names = $self->header_names ) {
-    foreach my $name ( @{ $header_names } ) {
+  if ( my $context = $self->context ) {
+    foreach my $name ( @{ $context } ) {
       my $key = _name_to_key $name;
       $header{ $name } = $env->{ $key } if defined $env->{ $key };
     }
