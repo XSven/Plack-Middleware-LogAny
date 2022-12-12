@@ -1,42 +1,62 @@
 # NAME
 
-Plack::Middleware::LogAny - Use Log::Any to handle logging from your Plack app
+Plack::Middleware::LogAny - Use Log::Any to handle logging from your PSGI
+application
 
 # SYNOPSIS
 
 ```perl
+# in app.psgi file
+use Plack::Builder;
+
+# PSGI application
+my $app = sub { ... };
+
+# DSL interface
 builder {
-  enable 'LogAny', category => 'plack';
+  enable 'LogAny', category => 'plack', context => [ qw( X-Request-ID ) ];
   $app;
 }
+
+# alternative OO interface
+Plack::Middleware::LogAny->wrap( $app, category => 'plack', context => [ qw( X-Request-ID ) ] );
 ```
 
 # DESCRIPTION
 
 LogAny is a [Plack::Middleware](https://metacpan.org/pod/Plack%3A%3AMiddleware) component that allows you to use [Log::Any](https://metacpan.org/pod/Log%3A%3AAny)
-to handle the logging object, `psgix.logger`.
+to handle the `psgix.logger` logging object. This object is a code reference
+that is described in [PSGI::Extensions](https://metacpan.org/pod/PSGI%3A%3AExtensions).
 
-It really tries to be the thinnest possible shim, so it doesn't handle any
-configuration beyond setting the category to which messages from plack might be
-logged.
+This middleware component really tries to be the thinnest possible shim, so it
+doesn't handle any configuration beyond setting the category to which messages
+from the PSGI application might be logged.
 
 # METHODS
 
-## prepare\_app
+## prepare\_app()
 
 This method initializes the logger using the category that you (optionally)
 set.
 
-## call
+## call()
 
-Actually handles making sure the logger is invoked.
+This method sets the logging object and the logging context. The logging
+context is localized.
 
-# CONFIGURATION
+# CONFIGURATION OPTIONS
 
 - category
 
     The `Log::Any` category to send logs to. Defaults to `''` which means it send
     to the root logger.
+
+- context
+
+    As of release 0.002.
+
+    A list of HTTP header names that is passed from the [PSGI
+    environment](https://metacpan.org/pod/PSGI#The-Environment) to the `Log::Any` logging context.
 
 # AUTHOR
 
