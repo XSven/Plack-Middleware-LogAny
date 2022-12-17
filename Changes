@@ -1,7 +1,8 @@
 Release history for Plack-Middleware-LogAny
 
-0.002     2022-12-12
+0.002     2022-12-17
           - revert release history
+          - revise perl pod
           - on request pass HTTP headers to logging context
 
 0.001003  2022-12-10

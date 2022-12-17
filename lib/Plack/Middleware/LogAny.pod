@@ -28,10 +28,6 @@ LogAny is a L<Plack::Middleware> component that allows you to use L<Log::Any>
 to handle the C<psgix.logger> logging object. This object is a code reference
 that is described in L<PSGI::Extensions>.
 
-This middleware component really tries to be the thinnest possible shim, so it
-doesn't handle any configuration beyond setting the category to which messages
-from the PSGI application might be logged.
-
 =head1 METHODS
 
 =head2 prepare_app()

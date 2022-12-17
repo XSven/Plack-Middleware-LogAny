@@ -28,10 +28,6 @@ LogAny is a [Plack::Middleware](https://metacpan.org/pod/Plack%3A%3AMiddleware) 
 to handle the `psgix.logger` logging object. This object is a code reference
 that is described in [PSGI::Extensions](https://metacpan.org/pod/PSGI%3A%3AExtensions).
 
-This middleware component really tries to be the thinnest possible shim, so it
-doesn't handle any configuration beyond setting the category to which messages
-from the PSGI application might be logged.
-
 # METHODS
 
 ## prepare\_app()
