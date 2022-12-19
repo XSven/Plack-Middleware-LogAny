@@ -4,7 +4,7 @@ use strict; use warnings;
 
 package Plack::Middleware::LogAny;
 
-our $VERSION = '0.002';
+our $VERSION = '0.002001';
 
 use parent                qw( Plack::Middleware );
 use subs                  qw( _name_to_key );
